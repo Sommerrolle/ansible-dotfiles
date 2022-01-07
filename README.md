@@ -1,7 +1,7 @@
 Just trying to keep my dotfiles in one place. Started with writing bash scripts to maintain the same state for my different machines but found [jwalton3141s project](https://github.com/jwalton3141/ansible-dotfiles) with ansible. I think its a much better solution.
 
 ![example
-desktop](https://raw.githubusercontent.com/jwalton3141/dotfiles/main/example-1.png)
+desktop](https://github.com/Sommerrolle/ansible-dotfiles/blob/main/pics/desktop.png?raw=true)
 
 ## What's provisioned?
 
