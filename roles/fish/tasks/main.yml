@@ -1,0 +1,14 @@
+- name: fish | Add paa for fish
+  apt_repository:
+    repo: 'ppa:fish-shell/release-3'
+
+- name: fish | Install fish
+  apt:
+    name: fish
+    state: present
+  become: yes
+    
+- name fish | Configure fish
+  copy:
+    src: config.fish
+    dest: $HOME/.config/fish/config.fish
