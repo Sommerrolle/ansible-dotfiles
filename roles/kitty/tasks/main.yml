@@ -1,0 +1,10 @@
+- name: kitty | Install kitty
+  apt:
+    name: kitty
+    state: present
+  become: yes
+
+- name: kitty | Configure kitty
+  copy:
+    src: kitty.conf
+    dest: $HOME/.config/kitty/kitty.conf
