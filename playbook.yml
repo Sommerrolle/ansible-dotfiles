@@ -2,9 +2,10 @@
   hosts: local
   roles:
     - git
-      #    - fonts
+    - fonts
     - i3-gaps
     - neovim
-    - fish
     - kitty
+    - fish
+    - starship
     - polybar

@@ -1,0 +1,7 @@
+- name: starship | Install starship prompt
+  ansible.builtin.shell: bash sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+
+- name: starship | Configure starship
+  copy:
+    src: starship.toml
+    dest: $HOME/.config/starship.toml
