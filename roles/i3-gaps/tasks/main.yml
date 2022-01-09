@@ -1,6 +1,6 @@
 - name: i3-gaps | Add ppa for i3-gaps
   apt_repository:
-    repo: 'ppa:kgilmer/speed-ricer'
+    repo: 'ppa:regolith-linux/stable'
 
 - name: i3-gaps | Install i3-gaps
   apt:
