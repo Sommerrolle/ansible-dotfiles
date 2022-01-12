@@ -15,7 +15,7 @@
     clone: yes
     update: yes
 
-- name: ranger | Add icons line to end of ranger config
-  lineinfile:
-    path: $HOME/.config/ranger/rc.conf
-    line: "default_linemode devicons"
+- name: ranger | Copy ranger config
+  copy:
+    src: rc.conf
+    dest: $HOME/.config/ranger/rc.conf
