@@ -1,0 +1,21 @@
+- name: ranger | Install package with pip3
+  pip:
+    name: ranger-fm
+    executable: pip3
+
+- name: ranger | Create directory for icons
+  file:
+    path: $HOME/.config/ranger/plugins
+    state: directory
+
+- name: ranger | Clone ranger icons repo
+  git:
+    repo: https://github.com/alexanderjeurissen/ranger_devicons
+    dest: $HOME/.config/ranger/plugins/
+    clone: yes
+    update: yes
+
+- name: ranger | Add icons line to end of ranger config
+  lineinfile:
+    path: $HOME/.config/ranger/rc.conf
+    line: "default_linemode devicons"
