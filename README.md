@@ -13,6 +13,7 @@ desktop](https://github.com/Sommerrolle/ansible-dotfiles/blob/main/pics/desktop.
   [oh-my-zsh](https://github.com/ohmyzsh/ohmyzshproject)
 * [Fish](https://fishshell.com/)
 * [Starship](https://starship.rs/)
+* [Ranger](https://github.com/ranger/ranger)
 
 ## I want it
 
