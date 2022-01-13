@@ -1,11 +1,12 @@
 - name: Set up local machine
-  hosts: local
+  hosts: localhost
   roles:
-    - git
-    - fonts
-    - i3-gaps
-    - neovim
-    - kitty
-    - fish
-    - starship
-    - polybar
+    #    - git
+    #    - fonts
+    #    - i3-gaps
+    #    - neovim
+    #    - kitty
+    #    - fish
+    #    - starship
+    #    - polybar
+  - ranger
