@@ -18,7 +18,7 @@ desktop](https://github.com/Sommerrolle/ansible-dotfiles/blob/main/pics/desktop.
 ## I want it
 
 ```sh
-git clone git@github.com:jwalton3141/ansible-dotfiles.git \
+git clone git@github.com:Sommerrolle/ansible-dotfiles.git \
   && cd ansible-dotfiles \
   && ./bin/setup.sh
 ```
