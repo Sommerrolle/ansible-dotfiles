@@ -8,7 +8,7 @@ SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Host file location
 HOSTS="$SCRIPTDIR/../hosts"
 # Main playbook
-PLAYBOOK="$SCRIPTDIR/../setup_system.yml"
+PLAYBOOK="$SCRIPTDIR/../playbook.yml"
 
 # Install ansible if not present
 if ! type ansible > /dev/null; then
