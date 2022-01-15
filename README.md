@@ -6,7 +6,6 @@ desktop](https://github.com/Sommerrolle/ansible-dotfiles/blob/main/pics/desktop.
 ## What's provisioned?
 
 * [i3-gaps](https://github.com/Airblader/i3)
-* [Polybar](https://github.com/polybar/polybar)
 * [Kitty](https://github.com/kovidgoyal/kitty)
 * [NeoVim](https://github.com/neovim/neovim)
 * [Zsh](https://wiki.archlinux.org/index.php/zsh) with 

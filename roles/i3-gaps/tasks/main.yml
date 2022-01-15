@@ -17,3 +17,13 @@
   copy:
     src: config
     dest: $HOME/.config/i3/config
+
+- name: i3-gaps | Ensure destination for i3status config exists
+  file:
+    path: $HOME/.config/i3status
+    state: directory
+
+- name: i3-gaps | Configure i3status
+  copy:
+    src: i3status.conf
+    dest: $HOME/.config/i3status/config
