@@ -15,10 +15,4 @@ desktop](https://github.com/Sommerrolle/ansible-dotfiles/blob/main/pics/desktop.
 * [Starship](https://starship.rs/)
 * [Ranger](https://github.com/ranger/ranger)
 
-## I want it
-
-```sh
-git clone git@github.com:Sommerrolle/ansible-dotfiles.git \
-  && cd ansible-dotfiles \
-  && ./bin/setup.sh
-```
+Still not tested every role
