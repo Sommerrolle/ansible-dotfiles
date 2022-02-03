@@ -27,3 +27,8 @@
   copy:
     src: i3status.conf
     dest: $HOME/.config/i3status/config
+
+- name: i3-gaps | Configure i3 auto layout
+  copy:
+    src: i3_auto_layout.py
+    dest: $HOME/.config/i3/i3_auto_layout.py
