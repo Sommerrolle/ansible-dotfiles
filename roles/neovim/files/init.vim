@@ -8,7 +8,7 @@ set undofile
 set scrolloff=8
 set signcolumn=yes
 " set colorcolumn=80
-set mouse=v                 " middle-click paste with mouse
+set mouse=a                 " middle-click paste with mouse
 
 " Tab and Indent configuration
 set tabstop=4               " number of columns occupied by a tab character
@@ -28,45 +28,29 @@ set nobackup
 set noswapfile
 set nowritebackup
 
-call plug#begin('~/config/nvim/autoload/plugged')
+" Install Vim Plug if its not installed yet
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+        silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+                                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-"Plug 'nvim-telescope/telescope.nvim'
+call plug#begin('~/config/nvim/autoload/plugged')
 Plug 'morhetz/gruvbox'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
-"Plug 'JamshedVesuna/vim-markdown-preview'
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"
-" Plugins for Python Coding
-Plug 'zchee/deoplete-jedi'
-Plug 'davidhalter/jedi-vim'
-" Plug 'tell-k/vim-autopep8' "Autoformatting python file according to PEP 8
-" Plug 'nvie/vim-flake8' "Linting python code
-
-" UI related
-Plug 'chriskempson/base16-vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-" Better Visual Guide
-Plug 'Yggdroot/indentLine'
-" syntax check
-Plug 'w0rp/ale'
-" Autocomplete
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-jedi'
-" Formater
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'preservim/nerdcommenter'
 Plug 'Chiel92/vim-autoformat'
+Plug 'jiangmiao/auto-pairs'
+Plug 'chrisbra/Colorizer'
+"Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 
-filetype plugin indent on " Wegen tutorial: https://yufanlu.net/2018/09/03/neovim-python/
-
-hi Normal guibg=NONE ctermbg=NONE 
-filetype plugin indent on   " allows auto-indenting depending on file type
 syntax on                   " syntax highlighting
-
+filetype plugin on
 let mapleader = " "
 
 " NERDTree settings
@@ -81,11 +65,14 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
-" FINDING FILES:
-set path+=**    " Search down into subfolders
-set wildmenu    " Display all matching files when we tab complete
-nnoremap <C-f> :find<CR>
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
+" vim-autoformat
+noremap <F3> :Autoformat<CR>
 " Code of Completion (coc) plugin"
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -93,72 +80,51 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Create matching brackets
-" Don't need it with jedivim python plugins'
-inoremap " ""<left>
-inoremap ' ''<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
 
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-" Further settings for python coding
-" Close auto-complete window automatically
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-" Navigate through auto-complete window with tab
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" Execute Python file
-autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
-autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-" davidhalter/jedi-vim configs
-" disable autocompletion, because we use deoplete for completion
-let g:jedi#completions_enabled = 0
-" open the go-to function in split, not another buffer
-let g:jedi#use_splits_not_buffers = "right"
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" vim-autoformat
-noremap <F3> :Autoformat<CR>
-" NCM2
-augroup NCM2
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
   autocmd!
-  " enable ncm2 for all buffers
-  autocmd BufEnter * call ncm2#enable_for_buffer()
-  " :help Ncm2PopupOpen for more information
-  set completeopt=noinsert,menuone,noselect
-  " When the <Enter> key is pressed while the popup menu is visible, it only
-  " hides the menu. Use this mapping to close the menu and also start a new line.
-  inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
-  " uncomment this block if you use vimtex for LaTex
-  " autocmd Filetype tex call ncm2#register_source({
-  "           \ 'name': 'vimtex',
-  "           \ 'priority': 8,
-  "           \ 'scope': ['tex'],
-  "           \ 'mark': 'tex',
-  "           \ 'word_pattern': '\w+',
-  "           \ 'complete_pattern': g:vimtex#re#ncm2,
-  "           \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-  "           \ })
-augroup END
-" Ale
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_linters = {'python': ['flake8']}
-" Airline
-let g:airline_left_sep  = ''
-let g:airline_right_sep = ''
-let g:airline#extensions#ale#enabled = 1
-let airline#extensions#ale#error_symbol = 'E:'
-let airline#extensions#ale#warning_symbol = 'W:'
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
-
-" Activate gruvbox color scheme
-"g:gruvbox_contrast_light = 'hard'
-"let g:gruvbox_contrast_dark='hard'
 colorscheme gruvbox
-"hi Normal guibg=NONE ctermbg=NONE
