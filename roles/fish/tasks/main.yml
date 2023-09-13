@@ -8,7 +8,15 @@
     state: present
   become: yes
     
-- name fish | Configure fish
+- name: fish | Configure fish
   copy:
     src: config.fish
     dest: $HOME/.config/fish/config.fish
+
+- name: fish | Copy functions to fish config folder
+  copy:
+    src: functions
+    dest: $HOME/.config/fish/
+    directory_mode:
+  tags:
+    - parentdir
