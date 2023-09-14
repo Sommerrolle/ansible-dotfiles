@@ -1,5 +1,11 @@
-- name: starship | Install starship prompt
-  ansible.builtin.shell: bash sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+- name: starship | Ensure curl is installed
+  apt:
+    name: curl
+    state: present
+  become: yes
+
+#- name: starship | Install starship prompt
+#  ansible.builtin.shell: curl -sS https://starship.rs/install.sh | sh
 
 - name: starship | Configure starship
   copy:

@@ -1,12 +1,17 @@
-- name: fish | Add paa for fish
-  apt_repository:
-    repo: 'ppa:fish-shell/release-3'
+# - name: fish | Add paa for fish
+#   apt_repository:
+#     repo: 'ppa:fish-shell/release-3'
 
 - name: fish | Install fish
   apt:
     name: fish
     state: present
   become: yes
+
+- name: fish | Ensure destination exists for fish config
+  file:
+    path: $HOME/.config/fish
+    state: directory
     
 - name: fish | Configure fish
   copy:
@@ -20,3 +25,8 @@
     directory_mode:
   tags:
     - parentdir
+
+- name: fish | Use fish as standard shell
+ ansible.builtin.shell: chsh -s $(which fish) 
+
+    

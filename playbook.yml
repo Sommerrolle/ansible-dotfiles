@@ -2,11 +2,10 @@
   hosts: localhost
   roles:
     #    - git
-    #    - fonts
+    - fonts
     #    - i3-gaps
     #    - neovim
-    #    - kitty
-    #    - fish
-    #    - starship
+    - kitty
+    - fish
+    - starship
     #    - polybar
-  - ranger
