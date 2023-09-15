@@ -3,9 +3,9 @@
   roles:
     #    - git
     #- fonts
-    - nerd-font
+    #- nerd-font
     #    - i3-gaps
-    #- neovim
+    - neovim
     # - kitty
     # - fish
     # - starship

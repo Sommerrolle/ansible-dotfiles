@@ -16,3 +16,15 @@
     remote_src: yes
     keep_newer: yes
   when: not nvim_install.stat.exists
+
+- name: Check if .config/nvim exists
+  file:
+    path: $HOME/.config/nvim
+    state: directory
+
+- name: Download/Update nvchad config ftom github
+  ansible.builtin.git:
+    repo: "https://github.com/NvChad/NvChad"
+    dest: "{{ ansible_env.HOME }}/.config/nvim"
+    depth: 1
+    force: yes
