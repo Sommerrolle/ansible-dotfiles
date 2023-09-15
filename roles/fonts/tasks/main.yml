@@ -1,9 +1,39 @@
+---
 # Needed for starship prompt
-- name: fonts | Install Fira Code
-  apt:
-    name: fonts-firacode
-    state: present
-  become: yes
+# - name: fonts | Install Fira Code
+#   apt:
+#     name: fonts-firacode
+#     state: present
+#   become: yes
+
+- name: Update from git
+  ansible.builtin.git:
+    repo: "https://github.com/ryanoasis/nerd-fonts.git"
+    dest: "{{ ansible_env.HOME }}/git_installs/nerd-fonts"
+    depth: 1
+    force: yes
+
+- name: Select fonts to install
+  ansible.builtin.find:
+    recurse: yes
+    use_regex: yes
+    paths: "{{ ansible_env.HOME }}/git_installs/nerd-fonts/patched-fonts"
+    patterns:
+      - '^.*?((?!Windows).)*?\.ttf$'
+  register: fonts_to_install
+
+#- debug: var=fonts_to_install
+
+- name: Copy fonts to .local/share/fonts
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.local/share/fonts/{{ item.path | basename }}"
+    src: "{{ item.path }}"
+    remote_src: yes
+  loop: "{{ fonts_to_install.files }}"
+  # notify:
+  #   - update font cache
+  # damit mal ein eigene role/taks schreiben die immer ausgeführt wird
+  # wenn eine neue font installiert wurde
 
 - name: fonts | Update font cache
   shell: 'fc-cache -v -f'

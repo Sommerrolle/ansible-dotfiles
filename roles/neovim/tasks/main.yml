@@ -1,25 +1,18 @@
-- name: neovim | Install neovim
-  apt:
-    name: neovim
-    state: present
-  become: yes
-
-- name: neovim | Ensure destination exists for vim-plug
+- name: Ensure destination exists for neovim install
   file:
-    path: $HOME/.config/nvim/autoload
+    path: $HOME/installs
     state: directory
 
-- name: neovim | Install vim-plug
-  get_url:
-    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    dest: $HOME/.vim/autoload/plug.vim
+- name: Check if it already exists
+  stat:
+    path: $HOME/installs/nvim-linux64
+  register: nvim_install
 
-- name: neovim | Copy init.vim to $HOME/.config/nvim/
-  copy:
-    src: init.vim
-    dest: $HOME/.config/nvim/init.vim
-
-- name: vim | Install vim plugins
-  shell: nvim '+PlugInstall --sync' +qall
-  register: vim_plug_output
-  changed_when: "'Resolving deltas' in vim_plug_output.stdout"
+# Download neovim version 0.9.0 for nvchad config
+- name: Download/unarchive Packages
+  unarchive:
+    src: https://github.com/neovim/neovim/releases/download/v0.9.0/nvim-linux64.tar.gz
+    dest: $HOME/installs
+    remote_src: yes
+    keep_newer: yes
+  when: not nvim_install.stat.exists
