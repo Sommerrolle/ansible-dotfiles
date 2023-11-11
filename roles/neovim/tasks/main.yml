@@ -22,7 +22,7 @@
     path: $HOME/.config/nvim
     state: directory
 
-- name: Download/Update nvchad config ftom github
+- name: Download/Update nvchad config from github
   ansible.builtin.git:
     repo: "https://github.com/NvChad/NvChad"
     dest: "{{ ansible_env.HOME }}/.config/nvim"

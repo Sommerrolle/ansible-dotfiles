@@ -27,6 +27,10 @@
     - parentdir
 
 - name: fish | Use fish as standard shell
- ansible.builtin.shell: chsh -s $(which fish) 
+  ansible.builtin.shell: chsh -s $(which fish) 
+
+- name: fish | Install fisher plugin manager 
+  ansible.builtin.shell: curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+
 
     
