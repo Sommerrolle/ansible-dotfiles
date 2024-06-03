@@ -1,3 +1,8 @@
+- name: Install ripgrep for telescope
+  ansible.builtin.apt:
+    name: ripgrep
+    state: present
+
 - name: Ensure destination exists for neovim install
   file:
     path: $HOME/installs
@@ -8,14 +13,27 @@
     path: $HOME/installs/nvim-linux64
   register: nvim_install
 
-# Download neovim version 0.9.0 for nvchad config
+# Download neovim version 0.10.0 for nvchad config
 - name: Download/unarchive Packages
   unarchive:
-    src: https://github.com/neovim/neovim/releases/download/v0.9.0/nvim-linux64.tar.gz
+    src: https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz
     dest: $HOME/installs
     remote_src: yes
     keep_newer: yes
   when: not nvim_install.stat.exists
+
+- name: 
+  ansible.builtin.copy:
+    src: "{{ lookup('env', 'HOME') }}/installs/nvim-linux64/bin/nvim"
+    dest: /usr/local/bin
+    mode: "0755"
+  become: yes
+
+- name: Ensure the script has execute permissions for the owner
+  file:
+    path: /usr/local/bin/nvim
+    mode: '0755'  # This ensures the file has execute permissions for the owner
+  become: yes  
 
 - name: Check if .config/nvim exists
   file:

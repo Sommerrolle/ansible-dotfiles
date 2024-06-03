@@ -1,0 +1,14 @@
+- name: Install required pip packages
+  ansible.builtin.pip:
+    name:
+      - numpy 
+      - aiohttp
+
+- name: Clone the pokemon-icat repository
+  ansible.builtin.git:
+    repo: https://github.com/aflaag/pokemon-icat
+    dest: $HOME/installs/pokemon-icat
+    update: yes
+
+- name: Run install.sh script
+  ansible.builtin.shell: $HOME/installs/pokemon-icat/install.sh

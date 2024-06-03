@@ -4,8 +4,10 @@
     state: present
   become: yes
 
-#- name: starship | Install starship prompt
-#  ansible.builtin.shell: curl -sS https://starship.rs/install.sh | sh
+# - name: starship | Install starship prompt
+#   ansible.builtin.shell: yes | curl -sS https://starship.rs/install.sh | sh
+#   args:
+#     executable: /bin/bash
 
 - name: starship | Configure starship
   copy:

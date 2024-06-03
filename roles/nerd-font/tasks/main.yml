@@ -1,15 +1,16 @@
-- name: ensure fonts directory
+- name: Ensure fonts directory
   file:
     path: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
     state: directory
 
-- name: Hack exists
-  shell: "ls {{ lookup('env', 'HOME') }}/.local/share/fonts/Hack*Nerd*Font*Complete*"
-  register: hack_exists
-  ignore_errors: yes
+- name: Check if Hack font exists
+  find:
+    paths: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
+    patterns: "Hack*Nerd*Font*Complete*"
+  register: hack_found
 
-- name: Download Hack
-  when: hack_exists is failed
+- name: Download Hack font
+  when: hack_found.matched == 0
   ansible.builtin.unarchive:
     src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
     dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
@@ -19,4 +20,3 @@
   shell: 'fc-cache -v -f'
   register: font_output
   changed_when: '"caching" in font_output.stdout'
-

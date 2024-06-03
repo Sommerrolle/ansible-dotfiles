@@ -1,12 +1,17 @@
-# - name: fish | Add paa for fish
-#   apt_repository:
-#     repo: 'ppa:fish-shell/release-3'
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: yes
 
 - name: fish | Install fish
   apt:
-    name: fish
+    name:
+      - fish
+      - exa
+      - python3-pip # (for pokemon-icat)
     state: present
   become: yes
+
 
 - name: fish | Ensure destination exists for fish config
   file:
@@ -28,9 +33,15 @@
 
 - name: fish | Use fish as standard shell
   ansible.builtin.shell: chsh -s $(which fish) 
+  become: yes
 
-- name: fish | Install fisher plugin manager 
-  ansible.builtin.shell: curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+- name: Install pokemon-icat
+  ansible.builtin.include_tasks:
+    file: pokemon-icat.yml
+
+# - name: fish | Install fisher plugin manager 
+#   ansible.builtin.shell: "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+#   become: yes
 
 
     
