@@ -8,6 +8,7 @@
     name:
       - fish
       - exa
+      - batcat
       - python3-pip # (for pokemon-icat)
     state: present
   become: yes
