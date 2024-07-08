@@ -1,0 +1,16 @@
+# - name: kitty | Install kitty
+#   apt:
+#     name: kitty
+#     state: present
+#   become: yes
+#
+# - name: Create kitty config directory
+#   ansible.builtin.file:
+#     path: $HOME/.config/kitty
+#     state: directory
+#
+#
+# - name: kitty | Configure kitty
+#   copy:
+#     src: kitty.conf
+#     dest: $HOME/.config/kitty/kitty.conf
