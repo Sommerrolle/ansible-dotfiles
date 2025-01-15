@@ -8,7 +8,7 @@
     name:
       - fish
       - exa
-      - batcat
+      - bat
       - python3-pip # (for pokemon-icat)
     state: present
   become: yes
@@ -36,9 +36,9 @@
   ansible.builtin.shell: chsh -s $(which fish) 
   become: yes
 
-- name: Install pokemon-icat
-  ansible.builtin.include_tasks:
-    file: pokemon-icat.yml
+    # - name: Install pokemon-icat
+    #   ansible.builtin.include_tasks:
+    #    file: pokemon-icat.yml
 
 # - name: fish | Install fisher plugin manager 
 #   ansible.builtin.shell: "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
