@@ -42,7 +42,7 @@
 
 - name: Download/Update nvchad config from github
   ansible.builtin.git:
-    repo: "https://github.com/NvChad/NvChad"
+    repo: "https://github.com/NvChad/starter"
     dest: "{{ ansible_env.HOME }}/.config/nvim"
     depth: 1
     force: yes
