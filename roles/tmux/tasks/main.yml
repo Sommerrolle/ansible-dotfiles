@@ -1,0 +1,11 @@
+- name: tmux | Install tmux
+  apt:
+    name: tmux
+    state: present
+  become: yes
+
+
+- name: tmux | Configure tmux
+  copy:
+    src: tmux.conf
+    dest: $HOME/tmux.conf
