@@ -1,0 +1,5 @@
+- name: Install hyprland packages
+  ansible.builtin.apt:
+    name: "{{ hyprland_packages }}"
+    state: present
+  become: true
