@@ -23,11 +23,23 @@ hl.monitor({
     scale    = 1.0,
 })
 hl.monitor({
-    output   = "desc:AU Optronics 0x7AA7",
-    mode     = "1920x1200@90",
-    position = "3840x1600",
+    output   = "desc:Dell Inc. DELL P2419H J8FQH73",
+    mode     = "1920x1080@60",
+    position = "5760x520",
     scale    = 1.0,
 })
+-- hl.monitor({
+--     output   = "desc:AU Optronics 0x7AA7",
+--     mode     = "1920x1200@90",
+--     position = "3840x1600",
+--     scale    = 1.0,
+-- })
+-- hl.monitor({
+--     output   = "desc:AU Optronics 0x7AA7",
+--     mode     = "1920x1200@90",
+--     position = "4858x1600",
+--     scale    = 1.0,
+-- })
 -- Fallback for any other connected monitor
 hl.monitor({
     output   = "",
@@ -41,19 +53,62 @@ hl.monitor({
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
--- eDP-1 (Laptop-Screen): ungerade Workspaces
-hl.workspace_rule({ workspace = "1",  monitor = "eDP-1", default = true })
-hl.workspace_rule({ workspace = "3",  monitor = "eDP-1" })
-hl.workspace_rule({ workspace = "5",  monitor = "eDP-1" })
-hl.workspace_rule({ workspace = "7",  monitor = "eDP-1" })
-hl.workspace_rule({ workspace = "9",  monitor = "eDP-1" })
+-- Workspace-Zuordnung haengt davon ab, ob 2 Monitore (Laptop + Ultrawide
+-- U3821DW) oder 3 Monitore (Laptop + U2415 + P2419H) angeschlossen sind.
+-- Auf "hyprland.start" UND "config.reloaded" registrieren: beim Start sind
+-- die Monitore erst dann sicher von hl.get_monitors() erfasst, und bei
+-- 'hyprctl reload' wird dieser Funktionskoerper sonst gar nicht erneut
+-- ausgefuehrt (nur die hl.on(...)-Registrierung selbst laeuft neu).
+local function applyWorkspaceRules()
+    local monitorCount = #hl.get_monitors()
 
--- DP-2 (externer Monitor): gerade Workspaces
-hl.workspace_rule({ workspace = "2",  monitor = "DP-2", default = true })
-hl.workspace_rule({ workspace = "4",  monitor = "DP-2" })
-hl.workspace_rule({ workspace = "6",  monitor = "DP-2" })
-hl.workspace_rule({ workspace = "8",  monitor = "DP-2" })
-hl.workspace_rule({ workspace = "10", monitor = "DP-2" })
+    if monitorCount >= 3 then
+        -- 3 Monitore: Laptop + U2415 + P2419H
+        hl.monitor({
+            output   = "desc:AU Optronics 0x7AA7",
+            mode     = "1920x1200@90",
+            position = "4858x1600",
+            scale    = 1.0,
+        })
+
+        hl.workspace_rule({ workspace = "1",  monitor = "desc:AU Optronics 0x7AA7", default = true })
+        hl.workspace_rule({ workspace = "4",  monitor = "desc:AU Optronics 0x7AA7" })
+        hl.workspace_rule({ workspace = "7",  monitor = "desc:AU Optronics 0x7AA7" })
+        hl.workspace_rule({ workspace = "10", monitor = "desc:AU Optronics 0x7AA7" })
+
+        hl.workspace_rule({ workspace = "2",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", default = true, layout = "dwindle" })
+        hl.workspace_rule({ workspace = "5",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", layout = "dwindle" })
+        hl.workspace_rule({ workspace = "8",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", layout = "scrolling" })
+
+        hl.workspace_rule({ workspace = "3",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", default = true, layout = "dwindle" })
+        hl.workspace_rule({ workspace = "6",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", layout = "dwindle" })
+        hl.workspace_rule({ workspace = "9",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", layout = "dwindle" })
+    else
+        -- 2 Monitore: Laptop + Ultrawide (bisheriges Verhalten)
+        hl.monitor({
+            output   = "desc:AU Optronics 0x7AA7",
+            mode     = "1920x1200@90",
+            position = "3840x1600",
+            scale    = 1.0,
+        })
+        -- eDP-1 (Laptop-Screen): ungerade Workspaces
+        hl.workspace_rule({ workspace = "1",  monitor = "eDP-1", default = true })
+        hl.workspace_rule({ workspace = "3",  monitor = "eDP-1" })
+        hl.workspace_rule({ workspace = "5",  monitor = "eDP-1" })
+        hl.workspace_rule({ workspace = "7",  monitor = "eDP-1" })
+        hl.workspace_rule({ workspace = "9",  monitor = "eDP-1" })
+
+        -- DP-2 (externer Monitor): gerade Workspaces
+        hl.workspace_rule({ workspace = "2",  monitor = "DP-2", default = true, layout = "dwindle"})
+        hl.workspace_rule({ workspace = "4",  monitor = "DP-2", layout = "dwindle" })
+        hl.workspace_rule({ workspace = "6",  monitor = "DP-2", layout = "dwindle" })
+        hl.workspace_rule({ workspace = "8",  monitor = "DP-2", layout = "scrolling" })
+        hl.workspace_rule({ workspace = "10", monitor = "DP-2", layout = "dwindle"})
+    end
+end
+
+hl.on("hyprland.start", applyWorkspaceRules)
+hl.on("config.reloaded", applyWorkspaceRules)
 
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.
@@ -87,6 +142,17 @@ hl.window_rule({
     },
 
     no_focus = true,
+})
+
+-- VSCODE center pop-ups
+hl.window_rule({
+  match = {
+    class = "^(code|Code)$",
+    title = "negative:^win.*",
+    float = true,
+  },
+  center = true,
+  size = { "monitor_w * 0.4", "monitor_h * 0.4" },
 })
 
 -------------------
@@ -214,6 +280,11 @@ hl.config({
         new_on_top = 1,
         mfact      = 0.5,
     },
+    scrolling = {
+        fullscreen_on_one_column = true,
+        column_width = 0.9,
+        direction = "right",
+    },
 })
 
 -----------
@@ -284,6 +355,8 @@ hl.bind(mainMod .. " + E",              hl.dsp.exec_cmd(files))
 hl.bind(mainMod .. " + Y",              hl.dsp.exec_cmd(term .. " yazi"))
 hl.bind(mainMod .. " + D",              hl.dsp.exec_cmd("pkill rofi || true && rofi -show drun -modi drun,filebrowser,run,window"))
 hl.bind(mainMod .. " + B",              hl.dsp.exec_cmd("firefox"))
+hl.bind(mainMod .. " + O",              hl.dsp.exec_cmd("obsidian"))
+
 -- hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd(scriptsDir .. "/Dropterminal.sh " .. term))
 
 -- Window management
