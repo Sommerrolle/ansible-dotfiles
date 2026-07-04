@@ -1,0 +1,17 @@
+- name: waybar | Install waybar
+  apt:
+    name: waybar
+    state: present
+  become: yes
+
+- name: waybar | Ensure destination exists for waybar config
+  file:
+    path: $HOME/.config/waybar
+    state: directory
+
+- name: waybar | Copy waybar config
+  copy:
+    src: waybar/
+    dest: $HOME/.config/waybar/
+  tags:
+    - parentdir

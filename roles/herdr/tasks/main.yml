@@ -1,0 +1,13 @@
+# herdr is not packaged for apt; install/update it manually via:
+#   curl -fsSL https://herdr.dev/install.sh | sh
+# or `herdr update` once installed.
+
+- name: herdr | Ensure destination exists for herdr config
+  file:
+    path: $HOME/.config/herdr
+    state: directory
+
+- name: herdr | Configure herdr
+  copy:
+    src: herdr/config.toml
+    dest: $HOME/.config/herdr/config.toml
