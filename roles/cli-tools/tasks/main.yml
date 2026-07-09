@@ -1,0 +1,8 @@
+---
+# tasks file for cli-tools
+- name: Install CLI tools via apt
+  apt:
+    name: "{{ cli_tools_packages }}"
+    state: present
+    update_cache: yes
+  become: yes

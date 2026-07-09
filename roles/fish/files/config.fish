@@ -37,3 +37,7 @@ set --export PATH $BUN_INSTALL/bin $PATH
 
 # init zoxide
 zoxide init fish | source
+
+# Go binaries
+fish_add_path /home/cvt/go/bin
+fish_add_path $HOME/.local/bin

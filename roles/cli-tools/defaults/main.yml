@@ -1,0 +1,41 @@
+---
+# defaults file for cli-tools
+cli_tools_packages:
+  # Modern cat replacement - better syntax highlighting
+  - bat
+
+  # Smart cd - learns your habits
+  # Note: zoxide is available via apt on Ubuntu 22.04+
+  # Alternative: cargo install zoxide --locked
+  - zoxide
+
+  # Modern ls replacement
+  # Note: eza is NOT in apt by default on most distros
+  # Install via: curl -sSL https://raw.githubusercontent.com/eza-community/eza/main/install.sh | sudo bash
+  # Or via cargo: cargo install eza --locked
+  - eza
+
+  # Fast find replacement - better UX
+  # apt install fd-find  # Ubuntu 20.04+
+  - fd-find
+
+  # Fuzzy finder - interactive search
+  # apt install fzf  # Ubuntu 20.04+
+  - fzf
+
+  # Shell history with sync
+  # Note: atuin requires apt version check; otherwise cargo install atuin
+  # apt install -y atuin  # Ubuntu 23.10+
+  # Alternative: curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh | sh
+  - atuin
+
+  # Ultra-fast Python package manager
+  # Install via: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+  # Better man pages - tldr client
+  # Install via: cargo install tealdeer
+  # Or: apt install tealdeer  # Ubuntu 23.10+
+
+  # Terminal UI for Docker
+  # Install via: go install github.com/jesseduffield/lazydocker@latest
+  # Or: apt install lazydocker  # Ubuntu 23.10+
