@@ -1,0 +1,34 @@
+- name: swaync | Install swaync
+  apt:
+    name: swaync
+    state: present
+  become: yes
+
+- name: swaync | Ensure destination exists for swaync config
+  file:
+    path: $HOME/.config/swaync
+    state: directory
+
+- name: swaync | Configure swaync
+  copy:
+    src: config.json
+    dest: $HOME/.config/swaync/config.json
+
+- name: swaync | Configure swaync style
+  copy:
+    src: style.css
+    dest: $HOME/.config/swaync/style.css
+
+- name: swaync | Copy swaync images
+  copy:
+    src: images/
+    dest: $HOME/.config/swaync/images/
+  tags:
+    - parentdir
+
+- name: swaync | Copy swaync icons
+  copy:
+    src: icons/
+    dest: $HOME/.config/swaync/icons/
+  tags:
+    - parentdir

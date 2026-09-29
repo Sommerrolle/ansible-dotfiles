@@ -1,0 +1,20 @@
+# wallust is not packaged for apt; install/update it manually via:
+#   cargo install wallust
+# see https://codeberg.org/explosion-mental/wallust
+
+- name: wallust | Ensure destination exists for wallust config
+  file:
+    path: $HOME/.config/wallust
+    state: directory
+
+- name: wallust | Configure wallust
+  copy:
+    src: wallust.toml
+    dest: $HOME/.config/wallust/wallust.toml
+
+- name: wallust | Copy wallust templates
+  copy:
+    src: templates/
+    dest: $HOME/.config/wallust/templates/
+  tags:
+    - parentdir

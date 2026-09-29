@@ -6,7 +6,18 @@
     - nerd-font
     #    - i3-gaps
     - neovim
-    # - kitty
+    - kitty
     - fish
-    # - starship
+    - starship
     #    - polybar
+    - ricing
+    - yazi
+    - wallust
+    - swaync
+    - wlogout
+    - atuin
+    - noctalia
+    - thunar
+    - yazi
+    - claude-code
+    - pi

@@ -16,7 +16,7 @@
 # Download neovim version 0.10.0 for nvchad config
 - name: Download/unarchive Packages
   unarchive:
-    src: https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz
+    src: https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
     dest: $HOME/installs
     remote_src: yes
     keep_newer: yes

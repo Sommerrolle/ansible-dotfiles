@@ -1,0 +1,20 @@
+- name: thunar | Install thunar
+  apt:
+    name: thunar
+    state: present
+  become: yes
+
+- name: thunar | Ensure destination exists for thunar config
+  file:
+    path: $HOME/.config/Thunar
+    state: directory
+
+- name: thunar | Configure thunar custom actions
+  copy:
+    src: uca.xml
+    dest: $HOME/.config/Thunar/uca.xml
+
+- name: thunar | Configure thunar accelerators
+  copy:
+    src: accels.scm
+    dest: $HOME/.config/Thunar/accels.scm

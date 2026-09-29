@@ -1,0 +1,19 @@
+- name: claude-code | Ensure destination exists for claude config
+  file:
+    path: $HOME/.claude
+    state: directory
+
+- name: claude-code | Configure claude settings
+  copy:
+    src: settings.json
+    dest: $HOME/.claude/settings.json
+
+- name: claude-code | Ensure destination exists for claude skills
+  file:
+    path: $HOME/.claude/skills/obsidian-tandem-comments
+    state: directory
+
+- name: claude-code | Copy obsidian-tandem-comments skill
+  copy:
+    src: skills/obsidian-tandem-comments/SKILL.md
+    dest: $HOME/.claude/skills/obsidian-tandem-comments/SKILL.md

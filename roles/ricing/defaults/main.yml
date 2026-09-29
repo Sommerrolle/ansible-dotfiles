@@ -1,0 +1,18 @@
+---
+# defaults file for ricing
+ricing_mpvpaper_repo: https://github.com/GhostNaN/mpvpaper
+ricing_mpvpaper_src: "{{ ansible_env.HOME }}/installs/mpvpaper"
+
+ricing_packages:
+  # Build tooling
+  - meson
+  - ninja-build
+  - pkgconf
+  - cmake
+  - build-essential
+
+  # mpvpaper build dependencies (wayland + egl + libmpv)
+  - libwayland-dev
+  - wayland-protocols
+  - libegl-dev
+  - libmpv-dev

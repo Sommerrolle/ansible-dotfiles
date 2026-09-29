@@ -1,0 +1,27 @@
+- name: wlogout | Install wlogout
+  apt:
+    name: wlogout
+    state: present
+  become: yes
+
+- name: wlogout | Ensure destination exists for wlogout config
+  file:
+    path: $HOME/.config/wlogout
+    state: directory
+
+- name: wlogout | Configure wlogout layout
+  copy:
+    src: layout
+    dest: $HOME/.config/wlogout/layout
+
+- name: wlogout | Configure wlogout style
+  copy:
+    src: style.css
+    dest: $HOME/.config/wlogout/style.css
+
+- name: wlogout | Copy wlogout icons
+  copy:
+    src: icons/
+    dest: $HOME/.config/wlogout/icons/
+  tags:
+    - parentdir

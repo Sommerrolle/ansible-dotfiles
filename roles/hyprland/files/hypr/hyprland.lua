@@ -9,7 +9,8 @@ local scriptsDir = HOME .. "/.config/hypr/scripts"
 ---- MONITORS ------
 --------------------
 -- Use 'hyprctl monitors' or 'nwg-displays' to find output names/descriptions
-
+--
+-- büro setup
 hl.monitor({
     output   = "desc:Dell Inc. DELL U3821DW 9V90073",
     mode     = "3840x1600@60",
@@ -17,10 +18,30 @@ hl.monitor({
     scale    = 1.0,
 })
 hl.monitor({
+    output   = "desc:Dell Inc. DELL U2312HM KF87Y3APB1SS",
+    mode     = "1920x1080@60",
+    position = "3840x1720",
+    scale    = 1.0,
+})
+hl.monitor({
+    output   = "desc:Samsung Electric Company SAMSUNG",
+    mode     = "3840x2160@30",
+    position = "1933x640",
+    scale    = 1.0,
+})
+-- zuhause setup
+hl.monitor({
+    output   = "desc:Dell Inc. DELL P3425WE B7HYY54",
+    mode     = "3440x1440@100",
+    position = "500x1360",
+    scale    = 1.0,
+})
+hl.monitor({
     output   = "desc:Dell Inc. DELL U2415 7MT0182524WL",
     mode     = "1920x1200@60",
-    position = "3840x400",
+    position = "3940x880",
     scale    = 1.0,
+    transform = 3,
 })
 hl.monitor({
     output   = "desc:Dell Inc. DELL P2419H J8FQH73",
@@ -52,6 +73,57 @@ hl.monitor({
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
+    -- Laptop-Bildschirm: Lid-Switch-gesteuert (Deckel zu -> aus, Deckel auf -> an)
+    -- Startet deaktiviert, da im Buero-Setup nur DP-2 + HDMI-A-1 genutzt werden.
+local laptopMonitor = {
+    output   = "desc:AU Optronics 0x7AA7",
+    mode     = "1920x1200@90",
+    position = "2830x2800",
+    scale    = 1.0,
+    disabled = false,
+}
+
+hl.monitor({
+    output   = laptopMonitor.output,
+    mode     = laptopMonitor.mode,
+    position = laptopMonitor.position,
+    scale    = laptopMonitor.scale,
+    disabled = false,
+})
+
+local function disableLaptopMonitor()
+    hl.monitor({ output = laptopMonitor.output, disabled = true })
+end
+
+local function enableLaptopMonitor()
+    hl.monitor(laptopMonitor)
+    os.execute("hyprctl reload")
+end
+
+-- close lid
+hl.bind("switch:on:Lid Switch",  disableLaptopMonitor, { locked = true })
+-- open lid
+hl.bind("switch:off:Lid Switch", enableLaptopMonitor,  { locked = true })
+
+-- TEMP DEBUG
+hl.bind("SUPER + F12", disableLaptopMonitor)
+
+-- HDMI-A-1 (Dell U2312HM): ungerade Workspaces
+hl.workspace_rule({ workspace = "1", monitor = "HDMI-A-1", layout = "dwindle", default = true })
+hl.workspace_rule({ workspace = "3", monitor = "HDMI-A-1", layout = "dwindle" })
+hl.workspace_rule({ workspace = "5", monitor = "HDMI-A-1", layout = "dwindle" })
+hl.workspace_rule({ workspace = "7", monitor = "HDMI-A-1", layout = "dwindle" })
+hl.workspace_rule({ workspace = "9", monitor = "HDMI-A-1", layout = "dwindle" })
+
+-- DP-2 (Dell U3821DW): gerade Workspaces
+hl.workspace_rule({ workspace = "2",  monitor = "DP-2", default = true, layout = "dwindle"})
+hl.workspace_rule({ workspace = "4",  monitor = "DP-2", layout = "scrolling" })
+hl.workspace_rule({ workspace = "6",  monitor = "DP-2", layout = "dwindle" })
+hl.workspace_rule({ workspace = "8",  monitor = "DP-2", layout = "scrolling" })
+hl.workspace_rule({ workspace = "10", monitor = "DP-2", layout = "dwindle"})
+
+-- eDP-1 (Laptop, falls per Lid-Switch aktiv): Workspace 11
+hl.workspace_rule({ workspace = "11", monitor = "eDP-1" })
 
 -- Workspace-Zuordnung haengt davon ab, ob 2 Monitore (Laptop + Ultrawide
 -- U3821DW) oder 3 Monitore (Laptop + U2415 + P2419H) angeschlossen sind.
@@ -62,33 +134,34 @@ hl.monitor({
 local function applyWorkspaceRules()
     local monitorCount = #hl.get_monitors()
 
-    if monitorCount >= 3 then
+    if monitorCount == 2 then
         -- 3 Monitore: Laptop + U2415 + P2419H
-        hl.monitor({
-            output   = "desc:AU Optronics 0x7AA7",
-            mode     = "1920x1200@90",
-            position = "4858x1600",
-            scale    = 1.0,
-        })
-
-        hl.workspace_rule({ workspace = "1",  monitor = "desc:AU Optronics 0x7AA7", default = true })
-        hl.workspace_rule({ workspace = "4",  monitor = "desc:AU Optronics 0x7AA7" })
-        hl.workspace_rule({ workspace = "7",  monitor = "desc:AU Optronics 0x7AA7" })
-        hl.workspace_rule({ workspace = "10", monitor = "desc:AU Optronics 0x7AA7" })
-
-        hl.workspace_rule({ workspace = "2",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", default = true, layout = "dwindle" })
-        hl.workspace_rule({ workspace = "5",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", layout = "dwindle" })
-        hl.workspace_rule({ workspace = "8",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", layout = "scrolling" })
-
-        hl.workspace_rule({ workspace = "3",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", default = true, layout = "dwindle" })
-        hl.workspace_rule({ workspace = "6",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", layout = "dwindle" })
-        hl.workspace_rule({ workspace = "9",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", layout = "dwindle" })
-    else
+    --     hl.monitor({
+    --         output   = "desc:AU Optronics 0x7AA7",
+    --         mode     = "1920x1200@90",
+    --         position = "2856x2800",
+    --         scale    = 1.0,
+    --         disabled = false,
+    --     })
+    --
+    --     hl.workspace_rule({ workspace = "1",  monitor = "desc:AU Optronics 0x7AA7", default = true })
+    --     hl.workspace_rule({ workspace = "4",  monitor = "desc:AU Optronics 0x7AA7" })
+    --     hl.workspace_rule({ workspace = "7",  monitor = "desc:AU Optronics 0x7AA7" })
+    --     hl.workspace_rule({ workspace = "10", monitor = "desc:AU Optronics 0x7AA7" })
+    --
+    --     hl.workspace_rule({ workspace = "2",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", default = true, layout = "dwindle" })
+    --     hl.workspace_rule({ workspace = "5",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", layout = "dwindle" })
+    --     hl.workspace_rule({ workspace = "8",  monitor = "desc:Dell Inc. DELL U2415 7MT0182524WL", layout = "scrolling" })
+    --
+    --     hl.workspace_rule({ workspace = "3",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", default = true, layout = "dwindle" })
+    --     hl.workspace_rule({ workspace = "6",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", layout = "dwindle" })
+    --     hl.workspace_rule({ workspace = "9",  monitor = "desc:Dell Inc. DELL P2419H J8FQH73", layout = "dwindle" })
+    -- else
         -- 2 Monitore: Laptop + Ultrawide (bisheriges Verhalten)
         hl.monitor({
             output   = "desc:AU Optronics 0x7AA7",
             mode     = "1920x1200@90",
-            position = "3840x1600",
+            position = "2830x2800",
             scale    = 1.0,
         })
         -- eDP-1 (Laptop-Screen): ungerade Workspaces
@@ -100,13 +173,14 @@ local function applyWorkspaceRules()
 
         -- DP-2 (externer Monitor): gerade Workspaces
         hl.workspace_rule({ workspace = "2",  monitor = "DP-2", default = true, layout = "dwindle"})
-        hl.workspace_rule({ workspace = "4",  monitor = "DP-2", layout = "dwindle" })
+        hl.workspace_rule({ workspace = "4",  monitor = "DP-2", layout = "scrolling" })
         hl.workspace_rule({ workspace = "6",  monitor = "DP-2", layout = "dwindle" })
         hl.workspace_rule({ workspace = "8",  monitor = "DP-2", layout = "scrolling" })
         hl.workspace_rule({ workspace = "10", monitor = "DP-2", layout = "dwindle"})
     end
 end
 
+-- trigger um die funktion oben auszuführen
 hl.on("hyprland.start", applyWorkspaceRules)
 hl.on("config.reloaded", applyWorkspaceRules)
 
@@ -144,6 +218,16 @@ hl.window_rule({
     no_focus = true,
 })
 
+-- Datei-Auswahl-Dialoge (Open/Save) kleiner & zentriert
+hl.window_rule({
+  match = {
+    class = "^xdg-desktop-portal-gtk$",
+  },
+  float  = true,
+  center = true,
+  size   = { "monitor_w * 0.4", "monitor_h * 0.5" },
+})
+
 -- VSCODE center pop-ups
 hl.window_rule({
   match = {
@@ -167,7 +251,8 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("swaync")
     hl.exec_cmd("blueman-applet")
-    hl.exec_cmd("waybar")
+    -- hl.exec_cmd("waybar")
+    hl.exec_cmd("noctalia")
     hl.exec_cmd("hypridle")
     -- hl.exec_cmd(scriptsDir .. "/Hyprsunset.sh init")
     -- hl.exec_cmd(scriptsDir .. "/KeybindsLayoutInit.sh")
@@ -282,7 +367,7 @@ hl.config({
     },
     scrolling = {
         fullscreen_on_one_column = true,
-        column_width = 0.9,
+        column_width = 0.5,
         direction = "right",
     },
 })
@@ -297,6 +382,7 @@ hl.config({
         disable_splash_rendering   = true,
         vrr                        = 2,
         mouse_move_enables_dpms    = true,
+        mouse_move_focuses_monitor = false,
         enable_swallow             = false,
         focus_on_activate          = false,
         middle_click_paste         = true,
@@ -394,13 +480,21 @@ hl.bind(mainMod .. " + SHIFT + down",   hl.dsp.window.resize({ x = 0,   y = 50, 
 hl.bind(mainMod .. " + mouse:272",      hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273",      hl.dsp.window.resize(), { mouse = true })
 
+-- Maus-Zusatztasten: Fenster-Fokus vor/zurück
+hl.bind(mainMod .. " + mouse:276",                    hl.dsp.window.cycle_next({ next = true }))
+hl.bind(mainMod .. " + mouse:275",                    hl.dsp.window.cycle_next({ next = false }))
+
 -- Workspace navigation
-hl.bind(mainMod .. " + Tab",            hl.dsp.focus({ workspace = "m+1" }))
-hl.bind(mainMod .. " + SHIFT + Tab",    hl.dsp.focus({ workspace = "m-1" }))
+hl.bind(mainMod .. " + Tab",            hl.dsp.focus({ workspace = "previous" }))
+hl.bind(mainMod .. " + SHIFT + Tab",    hl.dsp.focus({ workspace = "m+1" }))
 hl.bind(mainMod .. " + period",         hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + comma",          hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(mainMod .. " + mouse_down",     hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",       hl.dsp.focus({ workspace = "e-1" }))
+
+-- Mausrad: Fenster durchwechseln
+hl.bind(mainMod .. " + SHIFT + mouse_down", hl.dsp.window.cycle_next({ next = true }))
+hl.bind(mainMod .. " + SHIFT + mouse_up",   hl.dsp.window.cycle_next({ next = false }))
 
 -- Switch/move to workspace 1–10
 -- (key 0 = workspace 10)
@@ -432,7 +526,7 @@ hl.bind(mainMod .. " + CTRL + L",       hl.dsp.window.move({ into_group = "right
 hl.bind(mainMod .. " + CTRL + H",       hl.dsp.window.move({ out_of_group = true }))
 
 -- Layout
-hl.bind(mainMod .. " + P",              hl.dsp.window.pseudo())
+-- hl.bind(mainMod .. " + P",              hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + SHIFT + I",      hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + I",              hl.dsp.layout("addmaster"))
 hl.bind(mainMod .. " + CTRL + D",       hl.dsp.layout("removemaster"))
@@ -450,8 +544,8 @@ hl.bind("CTRL + ALT + P",         hl.dsp.exec_cmd(scriptsDir .. "/Wlogout.sh"))
 hl.bind(mainMod .. " + SHIFT + N",      hl.dsp.exec_cmd("swaync-client -t -sw"))
 
 -- Screenshot
-hl.bind(mainMod .. " + Print",          hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --now"))
-hl.bind(mainMod .. " + SHIFT + Print",  hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --area"))
+hl.bind(mainMod .. " + P",          hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --now"))
+hl.bind(mainMod .. " + SHIFT + P",  hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --area"))
 hl.bind(mainMod .. " + SHIFT + S",      hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --swappy"))
 hl.bind(mainMod .. " + CTRL + Print",   hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --in5"))
 hl.bind("ALT + Print",            hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --active"))

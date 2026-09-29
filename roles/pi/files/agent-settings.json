@@ -1,0 +1,8 @@
+{
+  "lastChangelogVersion": "0.80.2",
+  "theme": "dark",
+  "hideThinkingBlock": true,
+  "packages": [
+    "npm:@ogulcancelik/pi-herdr"
+  ]
+}

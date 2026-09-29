@@ -1,6 +1,15 @@
-# herdr is not packaged for apt; install/update it manually via:
-#   curl -fsSL https://herdr.dev/install.sh | sh
-# or `herdr update` once installed.
+# herdr is not packaged for apt; installed via its own install script,
+# see https://herdr.dev
+
+- name: herdr | Check if herdr is already installed
+  command: which herdr
+  register: herdr_installed
+  failed_when: false
+  changed_when: false
+
+- name: herdr | Install herdr
+  shell: curl -fsSL https://herdr.dev/install.sh | sh
+  when: herdr_installed.rc != 0
 
 - name: herdr | Ensure destination exists for herdr config
   file:

@@ -1,0 +1,33 @@
+# Installation steps for Ubuntu 26.04, see:
+# https://docs.noctalia.dev/noctalia/getting-started/installation/?section=tab-panel-11
+
+- name: noctalia | Check if repository signing key is already installed
+  command: dpkg -s nickh-archive-keyring
+  register: noctalia_keyring
+  failed_when: false
+  changed_when: false
+
+- name: noctalia | Download repository signing key
+  get_url:
+    url: https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb
+    dest: /tmp/nickh-archive-keyring.deb
+  when: noctalia_keyring.rc != 0
+
+- name: noctalia | Install repository signing key
+  apt:
+    deb: /tmp/nickh-archive-keyring.deb
+  become: yes
+  when: noctalia_keyring.rc != 0
+
+- name: noctalia | Add noctalia apt repository
+  get_url:
+    url: https://pkg.noctalia.dev/deb/noctalia-resolute.sources
+    dest: /etc/apt/sources.list.d/noctalia-resolute.sources
+  become: yes
+
+- name: noctalia | Install noctalia
+  apt:
+    name: noctalia
+    state: present
+    update_cache: yes
+  become: yes

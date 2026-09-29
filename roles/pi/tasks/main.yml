@@ -1,0 +1,34 @@
+- name: pi | Ensure destination exists for pi agent config
+  file:
+    path: $HOME/.pi/agent
+    state: directory
+
+- name: pi | Configure pi agent settings
+  copy:
+    src: agent-settings.json
+    dest: $HOME/.pi/agent/settings.json
+
+- name: pi | Ensure destination exists for pi agent extensions
+  file:
+    path: $HOME/.pi/agent/extensions/tavily-search
+    state: directory
+
+- name: pi | Copy atuin extension
+  copy:
+    src: extensions/atuin.ts
+    dest: $HOME/.pi/agent/extensions/atuin.ts
+
+- name: pi | Copy tavily-search extension
+  copy:
+    src: extensions/tavily-search/index.ts
+    dest: $HOME/.pi/agent/extensions/tavily-search/index.ts
+
+- name: pi | Ensure destination exists for pi agent_solo config
+  file:
+    path: $HOME/.pi/agent_solo
+    state: directory
+
+- name: pi | Configure pi agent_solo settings
+  copy:
+    src: agent_solo-settings.json
+    dest: $HOME/.pi/agent_solo/settings.json

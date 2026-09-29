@@ -45,8 +45,9 @@ adjusted_icon_size=$(echo "$icon_size" | awk '{if ($1 < 15) $1 = 20; if ($1 > 25
 rofi_override="element-icon{size:${adjusted_icon_size}%;}"
 
 # Kill existing wallpaper daemons for video
+# NOTE: swww is intentionally NOT killed here so that the other,
+# non-focused monitors keep showing their current (image) wallpaper.
 kill_wallpaper_for_video() {
-  swww kill 2>/dev/null
   pkill mpvpaper 2>/dev/null
   pkill swaybg 2>/dev/null
   pkill hyprpaper 2>/dev/null
@@ -157,7 +158,7 @@ apply_video_wallpaper() {
   kill_wallpaper_for_video
 
   # Apply video wallpaper using mpvpaper
-  mpvpaper '*' -o "load-scripts=no no-audio --loop" "$video_path" &
+  mpvpaper "$focused_monitor" -o "load-scripts=no no-audio --loop --panscan=1.0" "$video_path" &
 }
 
 # Main function

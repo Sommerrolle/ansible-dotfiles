@@ -1,4 +1,4 @@
-function lt --wraps='exa -aT --color=always --group-direcotires-first' --wraps='exa -aT --color=always --group-directories-first' --description 'alias lt=exa -aT --color=always --group-directories-first'
-  exa -aT --color=always --group-directories-first $argv
+function lt --wraps='eza -aT --color=always --group-direcotires-first' --wraps='eza -aT --color=always --group-directories-first' --description 'alias lt=eza -aT --color=always --group-directories-first'
+  eza -aT --color=always --group-directories-first $argv
         
 end

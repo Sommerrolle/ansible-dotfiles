@@ -16,6 +16,7 @@ end
 
 # opencode
 fish_add_path /home/cvt/.opencode/bin
+fish_add_path /home/cvt/go/bin
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -38,6 +39,6 @@ set --export PATH $BUN_INSTALL/bin $PATH
 # init zoxide
 zoxide init fish | source
 
-# Go binaries
-fish_add_path /home/cvt/go/bin
-fish_add_path $HOME/.local/bin
+if status is-interactive
+    atuin init fish | source
+end

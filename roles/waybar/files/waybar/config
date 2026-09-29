@@ -43,6 +43,7 @@
 
 "modules-right": [
 	"tray",
+	"connections",
 	"group/notify",
 	"clock",
 	"custom/weather",
@@ -50,7 +51,6 @@
 	//"network#speed"),
 	//"group/laptop",
 	//"group/mobo_drawer",
-	"group/connections",
 	"group/audio",
 	"custom/nightlight",
 	"group/status",

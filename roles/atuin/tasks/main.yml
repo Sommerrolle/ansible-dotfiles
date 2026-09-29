@@ -1,0 +1,17 @@
+# atuin | Ubuntu 23.10+ ships it in apt; otherwise install manually via:
+#   curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh | sh
+- name: atuin | Install atuin
+  apt:
+    name: atuin
+    state: present
+  become: yes
+
+- name: atuin | Ensure destination exists for atuin config
+  file:
+    path: $HOME/.config/atuin
+    state: directory
+
+- name: atuin | Configure atuin
+  copy:
+    src: config.toml
+    dest: $HOME/.config/atuin/config.toml

@@ -1,0 +1,32 @@
+---
+# tasks file for ricing
+- name: ricing | Install mpvpaper build dependencies
+  apt:
+    name: "{{ ricing_packages }}"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: ricing | Clone mpvpaper
+  git:
+    repo: "{{ ricing_mpvpaper_repo }}"
+    dest: "{{ ricing_mpvpaper_src }}"
+    single_branch: yes
+    version: master
+
+- name: ricing | Configure mpvpaper build
+  command: meson setup build --prefix=/usr/local
+  args:
+    chdir: "{{ ricing_mpvpaper_src }}"
+    creates: "{{ ricing_mpvpaper_src }}/build/build.ninja"
+
+- name: ricing | Build mpvpaper
+  command: ninja -C build
+  args:
+    chdir: "{{ ricing_mpvpaper_src }}"
+
+- name: ricing | Install mpvpaper
+  command: ninja -C build install
+  args:
+    chdir: "{{ ricing_mpvpaper_src }}"
+  become: yes

@@ -12,7 +12,7 @@ set -euo pipefail
 #   HYPRSUNSET_ICON_MODE  sunset|blue  (default: sunset)
 
 STATE_FILE="$HOME/.cache/.hyprsunset_state"
-TARGET_TEMP="${HYPRSUNSET_TEMP:-5000}"
+TARGET_TEMP="${HYPRSUNSET_TEMP:-3000}"
 ICON_MODE="${HYPRSUNSET_ICON_MODE:-sunset}"
 
 ensure_state() {

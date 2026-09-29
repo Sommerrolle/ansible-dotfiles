@@ -1,16 +1,34 @@
-# - name: kitty | Install kitty
-#   apt:
-#     name: kitty
-#     state: present
-#   become: yes
-#
-# - name: Create kitty config directory
-#   ansible.builtin.file:
-#     path: $HOME/.config/kitty
-#     state: directory
-#
-#
-# - name: kitty | Configure kitty
-#   copy:
-#     src: kitty.conf
-#     dest: $HOME/.config/kitty/kitty.conf
+# yazi is not reliably packaged for apt across distros; installed via cargo,
+# see https://yazi-rs.github.io/docs/installation/#cargo
+
+- name: yazi | Check if yazi is already installed
+  command: which yazi
+  register: yazi_installed
+  failed_when: false
+  changed_when: false
+
+- name: yazi | Ensure cargo is installed
+  apt:
+    name: cargo
+    state: present
+  become: yes
+  when: yazi_installed.rc != 0
+
+- name: yazi | Install yazi
+  command: cargo install --locked yazi-fm yazi-cli
+  when: yazi_installed.rc != 0
+
+- name: yazi | Ensure destination exists for yazi config
+  file:
+    path: $HOME/.config/yazi
+    state: directory
+
+- name: yazi | Configure yazi
+  copy:
+    src: yazi.toml
+    dest: $HOME/.config/yazi/yazi.toml
+
+- name: yazi | Configure yazi keymap
+  copy:
+    src: keymap.toml
+    dest: $HOME/.config/yazi/keymap.toml
